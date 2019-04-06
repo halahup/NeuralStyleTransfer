@@ -80,13 +80,13 @@ def main(style_img_path: str,
         style_activations[i] = style_activations[i].squeeze().view(style_activations[i].shape[1], -1).detach()
 
     # calculate the gram matrices of the style image
-    grams = [gram(style_activations[i]) for i in range(len(style_activations))]
+    style_grams = [gram(style_activations[i]) for i in range(len(style_activations))]
     
     # generate the Gaussian noise
     noise = torch.randn(1, 3, img_dim, img_dim, device=device, requires_grad=True)
     
     # define the adam optimizer
-    # pass the fearture map pixels to the optimnizer as parameters
+    # pass the feature map pixels to the optimizer as parameters
     adam = optim.Adam(params=[noise], lr=0.01, betas=(0.9, 0.999))
 
     # run the iteration
@@ -120,7 +120,7 @@ def main(style_img_path: str,
         style_loss = 0
         for i in range(len(style_activations)):
             N, M = noise_style_activations[i].shape[0], noise_style_activations[i].shape[1]
-            style_loss += (gram_loss(noise_grams[i], noise_grams[i], N, M) / 5.)
+            style_loss += (gram_loss(noise_grams[i], style_grams[i], N, M) / 5.)
 
         # put the style loss on device
         style_loss = style_loss.to(device)
