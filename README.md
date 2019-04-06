@@ -8,7 +8,7 @@ Breaking Down Gatys' Neural Style Transfer Algorithm
 Create the conda environment by running `conda env create -f reqs.yml`
 
 Note that GPU is highly recommended to train the model. Also, remember to weight your content, style and variance losses
-accordingly to desired results.
+according to desired results.
 
 Train the model by running `python nst.py --style_imge --content_image --img_dim --num_iter --style_loss_weight
  --content_loss_weight --variation_loss_weight --print_every --save_every` by setting the flags.
