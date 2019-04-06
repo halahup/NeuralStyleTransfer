@@ -15,7 +15,7 @@ Train the model by running `python nst.py --style_imge --content_image --img_dim
  
 ### Some Results
 
-![NST1](results/iter_11600_.png)
+![NST1](results/iter_9500.png)
 
 ![NST2](results/iter_11000.png)
 
