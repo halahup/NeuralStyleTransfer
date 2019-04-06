@@ -4,8 +4,6 @@ import torch.nn as nn
 from PIL import Image
 from torchvision import transforms
 from torch import optim
-import torch.nn.functional as F
-import numpy as np
 from torchvision.utils import save_image
 from vgg import VGG
 from losses import gram, gram_loss, total_variation_loss, content_loss
@@ -33,7 +31,10 @@ def main(style_img_path: str,
          variation_weight: int,
          print_every: int,
          save_every: int):
-    
+
+    assert style_img_path is not None
+    assert content_img_path is not None
+
     # define the device
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
@@ -101,7 +102,7 @@ def main(style_img_path: str,
         noise_content_activations = noise_content_activations.view(512, -1)
 
         # calculate the content loss
-        content_loss = content_loss(noise_content_activations, content_activations)
+        content_loss_ = content_loss(noise_content_activations, content_activations)
 
         # get the style activations of the noise image
         noise_style_activations = vgg.get_style_activations(noise)
@@ -119,7 +120,7 @@ def main(style_img_path: str,
         style_loss = 0
         for i in range(len(style_activations)):
             N, M = noise_style_activations[i].shape[0], noise_style_activations[i].shape[1]
-            style_loss += (gram_loss(noise_gram_matrices[i], gram_matrices[i], N, M) / 5.)
+            style_loss += (gram_loss(noise_grams[i], noise_grams[i], N, M) / 5.)
 
         # put the style loss on device
         style_loss = style_loss.to(device)
@@ -128,11 +129,11 @@ def main(style_img_path: str,
         variation_loss = total_variation_loss(noise).to(device)
 
         # weight the final losses and add them together
-        total_loss = content_weight * content_loss + style_weight * style_loss + variation_weight * variation_loss
+        total_loss = content_weight * content_loss_ + style_weight * style_loss + variation_weight * variation_loss
 
         if iteration % print_every == 0:
             print("Iteration: {}, Content Loss: {:.3f}, Style Loss: {:.3f}, Var Loss: {:.3f}".format(iteration, 
-                                                                                                     content_weight * content_loss.item(), 
+                                                                                                     content_weight * content_loss_.item(),
                                                                                                      style_weight * style_loss.item(), 
                                                                                                      variation_weight * variation_loss.item()))
 
@@ -166,12 +167,12 @@ if __name__ == "__main__":
     save_every = args.save_every
     
     # run the model
-    main(style_img_path = style_img_path,
-         content_img_path = content_img_path,
-         img_dim = img_dim,
-         num_iter = num_iter,
-         style_weight = style_weight,
-         content_weight = content_weight,
-         variation_weight = variation_weight,
-         print_every = print_every,
-         save_every = save_every)
+    main(style_img_path=style_img_path,
+         content_img_path=content_img_path,
+         img_dim=img_dim,
+         num_iter=num_iter,
+         style_weight=style_weight,
+         content_weight=content_weight,
+         variation_weight=variation_weight,
+         print_every=print_every,
+         save_every=save_every)
