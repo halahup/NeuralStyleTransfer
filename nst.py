@@ -14,12 +14,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--style_img", help="Path of the style image", type=str)
 parser.add_argument("--content_img", help="Path of the content image", type=str)
 parser.add_argument("--img_dim", help="Dimensions of the resulting image", type=int, default=512)
-parser.add_argument("--num_iter", help="Number of iterations to run", type=int, default=10000)
-parser.add_argument("--style_loss_weight", help="Weight for the style loss", type=int, default=10e6)
-parser.add_argument("--content_loss_weight", help="Weight for the content loss", type=int, default=10e-4)
-parser.add_argument("--variation_loss_weight", help="Weight for the variation loss", type=int, default=10e3)
-parser.add_argument("--print_every", help="Print the progress every K iretations", type=int, default=1000)
-parser.add_argument("--save_every", help="Save the image every K iterations", type=int, default=100)
+parser.add_argument("--num_iter", help="Number of iterations to run, default=10000", type=int, default=10000)
+parser.add_argument("--style_loss_weight", help="Weight for the style loss, default=10e6", type=int, default=10e6)
+parser.add_argument("--content_loss_weight", help="Weight for the content loss, default=10e-4", type=int, default=10e-4)
+parser.add_argument("--variation_loss_weight", help="Weight for the variation loss, default=10e3", type=int, default=10e3)
+parser.add_argument("--print_every", help="Print the progress every K iretations, default=1000", type=int, default=1000)
+parser.add_argument("--save_every", help="Save the image every K iterations, default=100", type=int, default=100)
 
 
 def main(style_img_path: str,
